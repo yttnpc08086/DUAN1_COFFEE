@@ -5,14 +5,18 @@
 package views;
 
 import Helper.ConnectUtil;
+import java.io.File;
 import javax.swing.table.DefaultTableModel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableRowSorter;
 
 /**
@@ -70,7 +74,8 @@ public class QuanLySanPhamJPanel extends javax.swing.JPanel {
             });
         }
     }
-private void filterTable(String query) {
+
+    private void filterTable(String query) {
         DefaultTableModel model = (DefaultTableModel) tblSanPhansd.getModel();
         TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(model);
         tblSanPhansd.setRowSorter(tr);
@@ -107,6 +112,7 @@ private void filterTable(String query) {
             e.printStackTrace();
         }
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -180,11 +186,13 @@ private void filterTable(String query) {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1215, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 93, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
         );
 
         tabs.addTab("Sản Phẩm sử dụng", jPanel2);
@@ -244,12 +252,12 @@ private void filterTable(String query) {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(txtTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel1.add(jPanel4);
-        jPanel4.setBounds(10, 400, 499, 58);
+        jPanel4.setBounds(10, 400, 0, 0);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setText("Mã sản phẩm");
@@ -479,25 +487,30 @@ private void filterTable(String query) {
         // TODO add your handling code here:
     }//GEN-LAST:event_tabsMouseClicked
 
+    private boolean isValidDate(String dateStr) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        sdf.setLenient(false);
+        try {
+            sdf.parse(dateStr);
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
+    }
+    
+    private void filterTableByProductCode(String productCode) {
+        DefaultTableModel model = (DefaultTableModel) tblSanPhansd.getModel();
+        TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(model);
+        tblSanPhansd.setRowSorter(tr);
+
+        // Sử dụng RowFilter để lọc theo mã sản phẩm (ID_Sanpham)
+        tr.setRowFilter(RowFilter.regexFilter("(?i)" + productCode, 0)); // Cột 0 là cột chứa mã sản phẩm
+    }
+    
     private void txtTimKiemKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimKiemKeyReleased
         // TODO add your handling code here:
         String searchText = txtTimKiem.getText().trim();
-
-        // Tách chuỗi nhập vào thành hai phần ngày bắt đầu và ngày kết thúc
-        String[] dateRange = searchText.split("-");
-
-        if (dateRange.length == 2) {
-            String startDate = dateRange[0].trim();
-            String endDate = dateRange[1].trim();
-            filterTableByDate(startDate, endDate);
-        } else {
-            // Nếu không nhập đúng định dạng, không lọc hoặc xử lý theo ý muốn
-            // Ví dụ: Xóa bộ lọc
-            DefaultTableModel model = (DefaultTableModel) tblSanPhansd.getModel();
-            TableRowSorter<DefaultTableModel> tr = new TableRowSorter<>(model);
-            tblSanPhansd.setRowSorter(tr);
-            tr.setRowFilter(null);
-        }
+        filterTableByProductCode(searchText);
     }//GEN-LAST:event_txtTimKiemKeyReleased
 
     private void txtTenSPKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTenSPKeyReleased
@@ -507,6 +520,23 @@ private void filterTable(String query) {
 
     private void lblHinhMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblHinhMouseClicked
         // TODO add your handling code here:
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Chọn hình ảnh");
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Image files", "jpg", "jpeg", "png", "gif"));
+
+        int result = fileChooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            // Lấy tệp đã chọn
+            File selectedFile = fileChooser.getSelectedFile();
+
+            // Hiển thị hình ảnh trong JLabel
+            ImageIcon imageIcon = new ImageIcon(selectedFile.getPath());
+            lblHinh.setIcon(imageIcon);
+
+            // Lưu đường dẫn hình ảnh (nếu cần)
+            String imagePath = selectedFile.getAbsolutePath();
+            // Bạn có thể lưu đường dẫn này vào cơ sở dữ liệu hoặc biến nào đó để sử dụng sau này
+        }
     }//GEN-LAST:event_lblHinhMouseClicked
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
@@ -596,13 +626,58 @@ private void filterTable(String query) {
 
     private void cboDonviActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboDonviActionPerformed
         // TODO add your handling code here:
+        String newDonvi = JOptionPane.showInputDialog(this, "Nhập đơn vị mới:");
+
+        // Kiểm tra đầu vào của người dùng
+        if (newDonvi != null && !newDonvi.trim().isEmpty()) {
+            newDonvi = newDonvi.trim(); // Xóa bỏ khoảng trắng đầu cuối
+
+            // Kiểm tra xem đơn vị mới đã tồn tại trong combobox chưa
+            boolean exists = false;
+            for (int i = 0; i < cboDonvi.getItemCount(); i++) {
+                if (newDonvi.equalsIgnoreCase(cboDonvi.getItemAt(i))) {
+                    exists = true;
+                    break;
+                }
+            }
+            // Nếu đơn vị mới chưa tồn tại, thêm vào combobox
+            if (!exists) {
+                cboDonvi.addItem(newDonvi);
+                JOptionPane.showMessageDialog(this, "Thêm đơn vị thành công!");
+            } else {
+                JOptionPane.showMessageDialog(this, "Đơn vị đã tồn tại!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else if (newDonvi != null) {
+            JOptionPane.showMessageDialog(this, "Tên đơn vị không được để trống.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_cboDonviActionPerformed
 
     private void btnloaidouongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnloaidouongActionPerformed
         // TODO add your handling code here:
         String newLoai = JOptionPane.showInputDialog(this, "Nhập loại đồ uống mới:");
+
+        // Kiểm tra đầu vào của người dùng
         if (newLoai != null && !newLoai.trim().isEmpty()) {
-            cboLoaidouong.addItem(newLoai);
+            newLoai = newLoai.trim(); // Xóa bỏ khoảng trắng đầu cuối
+
+            // Kiểm tra xem loại đồ uống mới đã tồn tại trong combobox chưa
+            boolean exists = false;
+            for (int i = 0; i < cboLoaidouong.getItemCount(); i++) {
+                if (newLoai.equalsIgnoreCase(cboLoaidouong.getItemAt(i))) {
+                    exists = true;
+                    break;
+                }
+            }
+
+            // Nếu loại đồ uống mới chưa tồn tại, thêm vào combobox
+            if (!exists) {
+                cboLoaidouong.addItem(newLoai);
+                JOptionPane.showMessageDialog(this, "Thêm loại đồ uống thành công!");
+            } else {
+                JOptionPane.showMessageDialog(this, "Loại đồ uống đã tồn tại!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else if (newLoai != null) {
+            JOptionPane.showMessageDialog(this, "Tên loại đồ uống không được để trống.", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnloaidouongActionPerformed
 

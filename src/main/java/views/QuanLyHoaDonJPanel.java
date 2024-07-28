@@ -8,6 +8,11 @@ import Helper.ConnectUtil;
 import javax.swing.table.DefaultTableModel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -17,6 +22,7 @@ public class QuanLyHoaDonJPanel extends javax.swing.JPanel {
 
     private DefaultTableModel hoadonModel;
     private DefaultTableModel huyhoadonModel;
+    private Object dateFormatter;
 
     /**
      * Creates new form QuanLyHoaDonJPanel
@@ -25,6 +31,7 @@ public class QuanLyHoaDonJPanel extends javax.swing.JPanel {
         initComponents();
         initTableModels();
         loadData();
+        dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
     }
 
     private void initTableModels() {
@@ -90,6 +97,21 @@ public class QuanLyHoaDonJPanel extends javax.swing.JPanel {
         }
     }
 
+    private String convertDateFormat(String dateStr) {
+        try {
+            SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = inputFormat.parse(dateStr);
+
+            // Initialize dateFormatter with the desired output format
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+
+            return dateFormatter.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -108,7 +130,7 @@ public class QuanLyHoaDonJPanel extends javax.swing.JPanel {
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtHD = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         btnTim = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
@@ -189,9 +211,9 @@ public class QuanLyHoaDonJPanel extends javax.swing.JPanel {
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setText("Mã hóa đơn");
 
-        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtHD.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                jTextField1KeyReleased(evt);
+                txtHDKeyReleased(evt);
             }
         });
 
@@ -229,6 +251,11 @@ public class QuanLyHoaDonJPanel extends javax.swing.JPanel {
                 cbotrangthaiItemStateChanged(evt);
             }
         });
+        cbotrangthai.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbotrangthaiActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -249,7 +276,7 @@ public class QuanLyHoaDonJPanel extends javax.swing.JPanel {
                                 .addComponent(btn_lammoi, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtHD, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(408, 408, 408)
                                 .addComponent(btnTim, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
@@ -279,7 +306,7 @@ public class QuanLyHoaDonJPanel extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtHD, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel2)
                         .addComponent(btnTim))
                     .addComponent(cbotrangthai))
@@ -321,12 +348,12 @@ public class QuanLyHoaDonJPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
+    private void txtHDKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtHDKeyReleased
 
-    }//GEN-LAST:event_jTextField1KeyReleased
+    }//GEN-LAST:event_txtHDKeyReleased
 
     private void btnTimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimActionPerformed
-
+        loadData();
     }//GEN-LAST:event_btnTimActionPerformed
 
     private void txtfind_mnvKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtfind_mnvKeyReleased
@@ -334,12 +361,75 @@ public class QuanLyHoaDonJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_txtfind_mnvKeyReleased
 
     private void btn_lammoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_lammoiActionPerformed
+        txtHD.setText("");
+        txtfind_mnv.setText("");
+        txttungay.setText("");
+        txtdenngay.setText("");
+        cbotrangthai.setSelectedIndex(0); // Reset combo box to the first item (if applicable)
 
+        // Reload data
+        loadData();
     }//GEN-LAST:event_btn_lammoiActionPerformed
 
     private void cbotrangthaiItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbotrangthaiItemStateChanged
+        if (evt.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
+            String selectedStatus = (String) cbotrangthai.getSelectedItem();
 
+            // Clear previous data
+            hoadonModel.setRowCount(0);
+            huyhoadonModel.setRowCount(0);
+
+            ResultSet rs = null;
+            try {
+                if ("All".equals(selectedStatus)) {
+                    // Load all data
+                    rs = ConnectUtil.query("SELECT * FROM HoaDon");
+                } else if ("Active".equals(selectedStatus)) {
+                    // Load only active invoices (Trangthai = 1)
+                    rs = ConnectUtil.query("SELECT * FROM HoaDon WHERE Trangthai = 1");
+                } else if ("Canceled".equals(selectedStatus)) {
+                    // Load only canceled invoices (Trangthai = 0)
+                    rs = ConnectUtil.query("SELECT * FROM HoaDon WHERE Trangthai = 0");
+                } else {
+                    // Default case, handle more statuses if needed
+                    rs = ConnectUtil.query("SELECT * FROM HoaDon");
+                }
+
+                while (rs.next()) {
+                    hoadonModel.addRow(new Object[]{
+                        rs.getInt("ID_Hoadon"),
+                        rs.getString("ID_Nhanvien"),
+                        rs.getDate("Ngaytao"),
+                        rs.getInt("Thanhtien"),
+                        rs.getString("Lydohuy"),
+                        rs.getInt("Soluongsanphamhuy"),
+                        rs.getString("ghichu"),
+                        rs.getString("SDT"),
+                        rs.getString("Ten"),
+                        rs.getString("diaChi"),
+                        rs.getInt("tenShip")
+                    });
+                }
+            } catch (SQLException e) {
+                Logger.getLogger(QuanLyHoaDonJPanel.class.getName()).log(Level.SEVERE, null, e);
+            } catch (Exception ex) {
+                Logger.getLogger(QuanLyHoaDonJPanel.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                if (rs != null) {
+                    try {
+                        rs.close();
+                    } catch (SQLException e) {
+                        Logger.getLogger(QuanLyHoaDonJPanel.class.getName()).log(Level.SEVERE, null, e);
+                    }
+                }
+            }
+        }
     }//GEN-LAST:event_cbotrangthaiItemStateChanged
+
+    private void cbotrangthaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbotrangthaiActionPerformed
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_cbotrangthaiActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -355,9 +445,9 @@ public class QuanLyHoaDonJPanel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTable tblhoadon;
     private javax.swing.JTable tblhuyhoadon;
+    private javax.swing.JTextField txtHD;
     private javax.swing.JTextField txtdenngay;
     private javax.swing.JTextField txtfind_mnv;
     private javax.swing.JTextField txttungay;

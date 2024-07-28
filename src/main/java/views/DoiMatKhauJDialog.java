@@ -4,6 +4,8 @@
  */
 package views;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author ASUS
@@ -152,8 +154,31 @@ public class DoiMatKhauJDialog extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_btnHuyActionPerformed
 
+    private boolean changePassword(String username, String oldPassword, String newPassword) {
+        return true;
+    }
+    
     private void btnDoiMKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDoiMKActionPerformed
         // TODO add your handling code here:
+        String username = txtTk.getText();
+        String oldPassword = new String(txtPassOld.getPassword());
+        String newPassword = new String(txtPassNew1.getPassword());
+        String confirmPassword = new String(txtPassNew2.getPassword());
+
+        if (username.isEmpty() || oldPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin!", "Error", JOptionPane.ERROR_MESSAGE);
+        } else if (!newPassword.equals(confirmPassword)) {
+            JOptionPane.showMessageDialog(this, "Mật khẩu mới và xác nhận mật khẩu không khớp!", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            boolean isPasswordChanged = changePassword(username, oldPassword, newPassword);
+
+            if (isPasswordChanged) {
+                JOptionPane.showMessageDialog(this, "Đổi mật khẩu thành công!");
+                dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Mật khẩu cũ không đúng hoặc xảy ra lỗi. Vui lòng thử lại!", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_btnDoiMKActionPerformed
 
     /**

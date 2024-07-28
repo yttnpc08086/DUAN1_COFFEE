@@ -331,7 +331,7 @@ public class DangnhapJDialog extends javax.swing.JDialog {
             } else {
                 int result = JOptionPane.showConfirmDialog(this,
                         "Tài khoản này đã bị khóa! Vui lòng liên hệ quản lý để mở!",
-                        "Hệ thống quản lý UpCoffee",
+                        "Hệ thống quản lý Coffee",
                         JOptionPane.YES_NO_OPTION);
                 if (result == JOptionPane.YES_OPTION) {
                     txtUserName.setText("");
@@ -353,7 +353,7 @@ public class DangnhapJDialog extends javax.swing.JDialog {
     private static class dao {
 
         private static NhanVien selectByAccount(String manv) {
-            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            throw new UnsupportedOperationException("Not supported yet.");
         }
 
         public dao() {

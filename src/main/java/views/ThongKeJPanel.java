@@ -5,10 +5,8 @@
 package views;
 
 import Helper.ConnectUtil;
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.sql.ResultSet;
-import java.sql.SQLException;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -16,80 +14,46 @@ import java.sql.SQLException;
  */
 public class ThongKeJPanel extends javax.swing.JPanel {
 
-    private DefaultTableModel tblModelBang;
-    private DefaultTableModel tblModelBangHuy;
-
     /**
      * Creates new form ThongKeJPanel
      */
     public ThongKeJPanel() {
         initComponents();
-//        initializeTableModels();
-//        loadData();
+        loadDataToTable();
     }
 
-//    private void initializeTableModels() {
-//        // Initialize table models for tblbang and tblbanghuy
-//        tblModelBang = new DefaultTableModel();
-//        tblModelBangHuy = new DefaultTableModel();
-//
-//        tblModelBang.addColumn("ID Hóa Đơn");
-//        tblModelBang.addColumn("Tên Khách Hàng");
-//        tblModelBang.addColumn("Ngày Tạo");
-//        tblModelBang.addColumn("Trạng Thái");
-//        tblModelBang.addColumn("Thành Tiền");
-//
-//        tblModelBangHuy.addColumn("ID Hóa Đơn");
-//        tblModelBangHuy.addColumn("Tên Khách Hàng");
-//        tblModelBangHuy.addColumn("Ngày Tạo");
-//        tblModelBangHuy.addColumn("Trạng Thái");
-//        tblModelBangHuy.addColumn("Lý Do Hủy");
-//        tblModelBangHuy.addColumn("Số Lượng Sản Phẩm Hủy");
-//
-//        tblbang.setModel(tblModelBang);
-//        tblbanghuy.setModel(tblModelBangHuy);
-//    }
-//
-//    private void loadData() {
-//        // Fetch and display data for tblbang
-//        try {
-//            String sqlBang = "SELECT ID_Hoadon, Ten, Ngaytao, Trangthai, Thanhtien FROM HoaDon WHERE Trangthai = 1";
-//            ResultSet rsBang = ConnectUtil.query(sqlBang);
-//
-//            while (rsBang.next()) {
-//                tblModelBang.addRow(new Object[]{
-//                    rsBang.getInt("ID_Hoadon"),
-//                    rsBang.getString("Ten"),
-//                    rsBang.getTimestamp("Ngaytao"),
-//                    rsBang.getBoolean("Trangthai") ? "Đã Thanh Toán" : "Chưa Thanh Toán",
-//                    rsBang.getInt("Thanhtien")
-//                });
-//            }
-//            rsBang.getStatement().getConnection().close();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        // Fetch and display data for tblbanghuy
-//        try {
-//            String sqlBangHuy = "SELECT ID_Hoadon, Ten, Ngaytao, Trangthai, Lydohuy, Soluongsanphamhuy FROM HoaDon WHERE Trangthai = 0";
-//            ResultSet rsBangHuy = ConnectUtil.query(sqlBangHuy);
-//
-//            while (rsBangHuy.next()) {
-//                tblModelBangHuy.addRow(new Object[]{
-//                    rsBangHuy.getInt("ID_Hoadon"),
-//                    rsBangHuy.getString("Ten"),
-//                    rsBangHuy.getTimestamp("Ngaytao"),
-//                    rsBangHuy.getBoolean("Trangthai") ? "Đã Thanh Toán" : "Chưa Thanh Toán",
-//                    rsBangHuy.getString("Lydohuy"),
-//                    rsBangHuy.getInt("Soluongsanphamhuy")
-//                });
-//            }
-//            rsBangHuy.getStatement().getConnection().close();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    private void loadDataToTable() {
+        try {
+            DefaultTableModel modelDaBan = (DefaultTableModel) tblbang.getModel();
+            modelDaBan.setRowCount(0); // Xóa dữ liệu cũ nếu có
+
+            DefaultTableModel modelDaHuy = (DefaultTableModel) tblbanghuy.getModel();
+            modelDaHuy.setRowCount(0); // Xóa dữ liệu cũ nếu có
+
+            String sql = "SELECT TenSanPham, SoLuongDaBan, TongTienDaBan, SoLuongDaHuy, TongTienDaHuy FROM ThongKe";
+            ResultSet rs = ConnectUtil.query(sql);
+
+            while (rs.next()) {
+                // Thêm dữ liệu vào bảng tblbang
+                Object[] rowDaBan = {
+                    rs.getString("TenSanPham"),
+                    rs.getInt("SoLuongDaBan"),
+                    rs.getInt("TongTienDaBan")
+                };
+                modelDaBan.addRow(rowDaBan);
+
+                // Thêm dữ liệu vào bảng tblbanghuy
+                Object[] rowDaHuy = {
+                    rs.getString("TenSanPham"),
+                    rs.getInt("SoLuongDaHuy"),
+                    rs.getInt("TongTienDaHuy")
+                };
+                modelDaHuy.addRow(rowDaHuy);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
