@@ -80,9 +80,9 @@ public class main extends javax.swing.JFrame {
         pnTrangChu = new javax.swing.JPanel();
         lblTrangchu = new javax.swing.JLabel();
         pnBanHang = new javax.swing.JPanel();
-        lblBanHang = new javax.swing.JLabel();
-        pnSanPham = new javax.swing.JPanel();
         lblSanPham = new javax.swing.JLabel();
+        pnSanPham = new javax.swing.JPanel();
+        lblBanHang = new javax.swing.JLabel();
         pnHoaDon = new javax.swing.JPanel();
         lblHoaDon = new javax.swing.JLabel();
         pnNhanVien = new javax.swing.JPanel();
@@ -156,13 +156,13 @@ public class main extends javax.swing.JFrame {
             }
         });
 
-        lblBanHang.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
-        lblBanHang.setForeground(new java.awt.Color(255, 255, 255));
-        lblBanHang.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/basket-solid-24.png"))); // NOI18N
-        lblBanHang.setText("Bán hàng");
-        lblBanHang.addMouseListener(new java.awt.event.MouseAdapter() {
+        lblSanPham.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
+        lblSanPham.setForeground(new java.awt.Color(255, 255, 255));
+        lblSanPham.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/coffee-bean-solid-24.png"))); // NOI18N
+        lblSanPham.setText("Sản Phẩm");
+        lblSanPham.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblBanHangMouseClicked(evt);
+                lblSanPhamMouseClicked(evt);
             }
         });
 
@@ -171,16 +171,15 @@ public class main extends javax.swing.JFrame {
         pnBanHangLayout.setHorizontalGroup(
             pnBanHangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnBanHangLayout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(lblBanHang)
-                .addContainerGap(150, Short.MAX_VALUE))
+                .addGap(25, 25, 25)
+                .addComponent(lblSanPham)
+                .addContainerGap(174, Short.MAX_VALUE))
         );
         pnBanHangLayout.setVerticalGroup(
             pnBanHangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnBanHangLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblBanHang, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(0, 12, Short.MAX_VALUE)
+                .addComponent(lblSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jPanel1.add(pnBanHang);
@@ -192,13 +191,13 @@ public class main extends javax.swing.JFrame {
             }
         });
 
-        lblSanPham.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
-        lblSanPham.setForeground(new java.awt.Color(255, 255, 255));
-        lblSanPham.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/coffee-bean-solid-24.png"))); // NOI18N
-        lblSanPham.setText("Sản Phẩm");
-        lblSanPham.addMouseListener(new java.awt.event.MouseAdapter() {
+        lblBanHang.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
+        lblBanHang.setForeground(new java.awt.Color(255, 255, 255));
+        lblBanHang.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/basket-solid-24.png"))); // NOI18N
+        lblBanHang.setText("Bán hàng");
+        lblBanHang.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblSanPhamMouseClicked(evt);
+                lblBanHangMouseClicked(evt);
             }
         });
 
@@ -207,15 +206,15 @@ public class main extends javax.swing.JFrame {
         pnSanPhamLayout.setHorizontalGroup(
             pnSanPhamLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnSanPhamLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(lblSanPham)
-                .addContainerGap(145, Short.MAX_VALUE))
+                .addGap(21, 21, 21)
+                .addComponent(lblBanHang)
+                .addContainerGap(184, Short.MAX_VALUE))
         );
         pnSanPhamLayout.setVerticalGroup(
             pnSanPhamLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnSanPhamLayout.createSequentialGroup()
-                .addGap(0, 12, Short.MAX_VALUE)
-                .addComponent(lblSanPham, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(pnSanPhamLayout.createSequentialGroup()
+                .addComponent(lblBanHang, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 12, Short.MAX_VALUE))
         );
 
         jPanel1.add(pnSanPham);
@@ -385,7 +384,7 @@ public class main extends javax.swing.JFrame {
                         .addComponent(jLabel1)
                         .addGap(29, 29, 29)
                         .addComponent(lblNameNV, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 117, Short.MAX_VALUE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(65, 65, 65)))
