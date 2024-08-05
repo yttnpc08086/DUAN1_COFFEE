@@ -8,19 +8,30 @@ import DAO.NhanVienDAO;
 import Helper.Auth;
 import Helper.ConnectUtil;
 import Helper.MsgBox;
-import Helper.XEcel;
 import Helper.Ximage;
+import Helper.Ximages;
 import Model.NhanVien;
 import java.awt.Image;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  *
@@ -51,7 +62,7 @@ public class NhanVienPanel extends javax.swing.JPanel {
         model.setRowCount(0);
 
         try {
-            String sql = "SELECT * FROM NhanVien";
+            String sql = "SELECT * FROM NhanVien Where Trangthai=1";
             ResultSet rs = ConnectUtil.query(sql);
 
             while (rs.next()) {
@@ -76,7 +87,7 @@ public class NhanVienPanel extends javax.swing.JPanel {
         model.setRowCount(0); // Clear existing rows
 
         try {
-            String sql = "SELECT * FROM NhanVien";
+            String sql = "SELECT * FROM NhanVien Where Trangthai=0";
             ResultSet rs = ConnectUtil.query(sql);
 
             while (rs.next()) {
@@ -129,7 +140,6 @@ public class NhanVienPanel extends javax.swing.JPanel {
         jLabel11 = new javax.swing.JLabel();
         rdoLamViec = new javax.swing.JRadioButton();
         txtTenNV = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
         lblhinh = new javax.swing.JLabel();
         btnExcel = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
@@ -142,7 +152,6 @@ public class NhanVienPanel extends javax.swing.JPanel {
         jLabel8 = new javax.swing.JLabel();
         rdoQuanly = new javax.swing.JRadioButton();
         txtTaikhoan = new javax.swing.JTextField();
-        cboSort = new javax.swing.JComboBox<>();
         btnThem = new javax.swing.JButton();
         btnXoa = new javax.swing.JButton();
         dchNgaySinh = new com.toedter.calendar.JDateChooser();
@@ -280,8 +289,6 @@ public class NhanVienPanel extends javax.swing.JPanel {
             }
         });
 
-        jLabel6.setText("Quản Lý Nhân Viên");
-
         lblhinh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/user (1).png"))); // NOI18N
         lblhinh.setText("Click me!");
         lblhinh.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -324,8 +331,6 @@ public class NhanVienPanel extends javax.swing.JPanel {
         grpVaiTro.add(rdoQuanly);
         rdoQuanly.setText("Quản lý");
 
-        cboSort.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Mã NV", "Tên", "Vai trò", "Giới tính" }));
-
         btnThem.setFont(new java.awt.Font("Cambria", 0, 14)); // NOI18N
         btnThem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/add.png"))); // NOI18N
         btnThem.setText("Thêm");
@@ -349,14 +354,9 @@ public class NhanVienPanel extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(38, 38, 38)
-                        .addComponent(lblhinh, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(35, 35, 35)
+                .addGap(38, 38, 38)
+                .addComponent(lblhinh, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(41, 41, 41)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -424,26 +424,17 @@ public class NhanVienPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jTabbedPane4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(cboSort, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnThem, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnXoa, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnSua, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbnLamMoi, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnExcel, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel6)))
+                .addGap(10, 10, 10)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnThem, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnXoa, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSua, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbnLamMoi, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnExcel, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(38, 38, 38)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -505,9 +496,7 @@ public class NhanVienPanel extends javax.swing.JPanel {
                                         .addGap(13, 13, 13)
                                         .addComponent(lblhinh, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(0, 0, Short.MAX_VALUE)))))
-                .addGap(18, 18, 18)
-                .addComponent(cboSort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(52, 52, 52)
                 .addComponent(jTabbedPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28))
         );
@@ -547,16 +536,29 @@ public class NhanVienPanel extends javax.swing.JPanel {
         updateStatus();
         row = -1;
     }//GEN-LAST:event_txtTenNVKeyReleased
-
+    private void selectIcon() {
+        JFileChooser fc = new JFileChooser("logos");
+        FileFilter filter = new FileNameExtensionFilter("Image Files", "gif", "jpeg", "jpg", "png");
+        fc.setFileFilter(filter);
+        fc.setMultiSelectionEnabled(false);
+        int kq = fc.showOpenDialog(fc);
+        if (kq == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            Ximage.save(file); // lưu hình vào thư mục logos
+            ImageIcon icon = Ximage.read(file.getName()); // đọc hình từ logos
+            lblhinh.setIcon(icon);
+            lblhinh.setToolTipText(file.getName()); // giữ tên hình trong tooltip
+        }
+    }
     private void lblhinhMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblhinhMouseClicked
-        selectImage();
+        this.selectIcon();
 
     }//GEN-LAST:event_lblhinhMouseClicked
 
     private void btnExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcelActionPerformed
-//        exportToExcel();
-        XEcel ecel = new XEcel();
-        ecel.exportToExcel();
+        exportToExcel();
+//        XEcel ecel = new XEcel();
+//        ecel.exportToExcel();
     }//GEN-LAST:event_btnExcelActionPerformed
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
@@ -573,7 +575,6 @@ public class NhanVienPanel extends javax.swing.JPanel {
     private javax.swing.JButton btnSua;
     private javax.swing.JButton btnThem;
     private javax.swing.JButton btnXoa;
-    private javax.swing.JComboBox<String> cboSort;
     private com.toedter.calendar.JDateChooser dchNgaySinh;
     private javax.swing.ButtonGroup grpGioiTinh;
     private javax.swing.ButtonGroup grpTrangThai;
@@ -585,7 +586,6 @@ public class NhanVienPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
@@ -623,41 +623,6 @@ public class NhanVienPanel extends javax.swing.JPanel {
         clearForm();
 
     }
-    private String currentFilePath = "";
-
-    private void selectImage() {
-        // Tạo đối tượng JFileChooser
-        JFileChooser fileChooser = new JFileChooser();
-
-        // Mở hộp thoại chọn file và lấy kết quả
-        int result = fileChooser.showOpenDialog(this);
-
-        // Nếu người dùng đã chọn một file
-        if (result == JFileChooser.APPROVE_OPTION) {
-            // Lấy file đã chọn
-            File file = fileChooser.getSelectedFile();
-            // Cập nhật đường dẫn của file hiện tại
-            currentFilePath = file.getAbsolutePath();
-            // Hiển thị hình ảnh dựa trên đường dẫn
-            setImageLabel(currentFilePath);
-        }
-    }
-
-    private void setImageLabel(String imagePath) {
-        if (imagePath == null || imagePath.isBlank()) {
-            System.out.println("Đường dẫn rỗng!");
-            lblhinh.setIcon(null); // Xóa hình ảnh trong JLabel
-        } else {
-            try {
-                ImageIcon icon = new ImageIcon(imagePath);
-                Image image = icon.getImage().getScaledInstance(lblhinh.getWidth(), lblhinh.getHeight(), Image.SCALE_SMOOTH);
-                icon.setImage(image); // Cập nhật hình ảnh trong ImageIcon
-                lblhinh.setIcon(icon); // Hiển thị hình ảnh trong JLabel
-            } catch (Exception e) {
-                System.out.println("Lỗi khi hiển thị hình ảnh: " + e.getMessage());
-            }
-        }
-    }
 
     void insert() {
         if (checkEmail() && checkLength() && checkSame() && checkSameAccount()) {
@@ -693,21 +658,28 @@ public class NhanVienPanel extends javax.swing.JPanel {
     }
 
     void delete() {
-        if (!Auth.isManager()) {
-            MsgBox.alert(this, "Bạn không có quyền xóa nhân viên!");
-        } else {
-            if (MsgBox.confirm(this, "Bạn muốn xóa nhân viên?")) {
-                try {
-                    String manv = txtMaNV.getText();
-                    nvDao.delete(manv);
-                    this.fillToTableNVHD();
-                    this.fillToTableNVKHD();
-                    this.clearForm();
-                    MsgBox.alert(this, "Xóa thành công!!");
-                } catch (Exception e) {
-                    MsgBox.alert(this, "Xóa thất bại");
-                    e.printStackTrace();
+        String manv = txtMaNV.getText();
+        if (Auth.user == null) {
+            MsgBox.alert(this, "Người dùng chưa đăng nhập!");
+            return;
+        }
+
+        if (manv.equals(Auth.user.getId_Nhanvien())) {
+            MsgBox.alert(this, "Bạn không được phép xóa chính mình!");
+        } else if (MsgBox.confirm(this, "Bạn muốn xóa nhân viên?")) {
+            try {
+                if (rdoLamViec.isSelected()) {
+                    nvDao.deletehd(manv);
+                } else {
+                    nvDao.deleteKhd(manv);
                 }
+                this.fillToTableNVHD();
+                this.fillToTableNVKHD();
+                this.clearForm();
+                MsgBox.alert(this, "Xóa thành công!");
+            } catch (Exception e) {
+                MsgBox.alert(this, "Xóa thất bại");
+                e.printStackTrace();
             }
         }
     }
@@ -751,10 +723,8 @@ public class NhanVienPanel extends javax.swing.JPanel {
         rdoNhanvien.setSelected(!nv.isVaiTro());
         rdoLamViec.setSelected(nv.isTrangThai());
         rdoNghiViec.setSelected(!nv.isTrangThai());
-        if (nv.getHinh() != null) {
-            lblhinh.setToolTipText(nv.getHinh());
-            lblhinh.setIcon(Ximage.read(nv.getHinh()));
-        }
+        ImageIcon imageIcon = Ximages.read("imageName.jpg"); // Hoặc Ximage.read("imageName.jpg");
+        lblhinh.setIcon(imageIcon);
     }
 
     public NhanVien getForm() {
@@ -1004,7 +974,7 @@ public class NhanVienPanel extends javax.swing.JPanel {
     }
 
     public void fillTableSearchName(String nhanVien) {
-        DefaultTableModel model = (DefaultTableModel) tblNhanVienkhd.getModel();
+        DefaultTableModel model = (DefaultTableModel) tblNhanVienhd.getModel();
         model.setRowCount(0);
         try {
             String keyword = txtTenNV.getText();
@@ -1036,65 +1006,65 @@ public class NhanVienPanel extends javax.swing.JPanel {
         }
     }
 
-//    private void exportToExcel() {
-//        JFileChooser fileChooser = new JFileChooser();
-//        fileChooser.setDialogTitle("Chọn nơi lưu file Excel");
-//        fileChooser.setSelectedFile(new File("DSSV.xlsx")); // Đặt tên file mặc định
-//
-//        // Hiển thị hộp thoại lưu file
-//        int userSelection = fileChooser.showSaveDialog(null);
-//        if (userSelection != JFileChooser.APPROVE_OPTION) {
-//            MsgBox.alert(null, "Người dùng hủy chọn lưu file.");
-//            return;
-//        }
-//
-//        File fileToSave = fileChooser.getSelectedFile();
-//        String filePath = fileToSave.getAbsolutePath();
-//
-//        // Nếu người dùng không nhập đuôi file, thêm đuôi ".xlsx"
-//        if (!filePath.endsWith(".xlsx")) {
-//            filePath += ".xlsx";
-//
-//        }
-//
-//        Workbook workbook = new XSSFWorkbook();
-//        Sheet sheetHd = workbook.createSheet("NV hoạt động");
-//        Sheet sheetkhd = workbook.createSheet("NV không hoạt động");
-//
-//        exportTableToSheet(tblNhanVienhd, sheetHd);
-//
-//        exportTableToSheet(tblNhanVienkhd, sheetkhd);
-//
-//        try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
-//            workbook.write(fileOut);
-//            workbook.close();
-//            MsgBox.alert(this, "Xuất dữ liệu ra Excel thành công.");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            MsgBox.alert(this, "Có lỗi xảy ra khi xuất dữ liệu ra Excel.");
-//        }
-//    }
-//
-//    private void exportTableToSheet(javax.swing.JTable table, Sheet sheet) {
-//        TableModel model = table.getModel();
-//
-//        Row headerRow = sheet.createRow(0);
-//        for (int i = 0; i < model.getColumnCount(); i++) {
-//            Cell cell = headerRow.createCell(i);
-//            cell.setCellValue(model.getColumnName(i));
-//        }
-//
-//        for (int i = 0; i < model.getRowCount(); i++) {
-//            Row row = sheet.createRow((short) i + 1);
-//            for (int j = 0; j < model.getColumnCount(); j++) {
-//                Cell cell = row.createCell((short) j);
-//                cell.setCellValue(Objects.toString(model.getValueAt(i, j), ""));
-//            }
-//        }
-//
-//        // Auto size columns once after all data is populated
-//        for (int i = 0; i < model.getColumnCount(); i++) {
-//            sheet.autoSizeColumn(i);
-//        }
-//    }
+    private void exportToExcel() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Chọn nơi lưu file Excel");
+        fileChooser.setSelectedFile(new File("DSSV.xlsx")); // Đặt tên file mặc định
+
+        // Hiển thị hộp thoại lưu file
+        int userSelection = fileChooser.showSaveDialog(null);
+        if (userSelection != JFileChooser.APPROVE_OPTION) {
+            MsgBox.alert(null, "Người dùng hủy chọn lưu file.");
+            return;
+        }
+
+        File fileToSave = fileChooser.getSelectedFile();
+        String filePath = fileToSave.getAbsolutePath();
+
+        // Nếu người dùng không nhập đuôi file, thêm đuôi ".xlsx"
+        if (!filePath.endsWith(".xlsx")) {
+            filePath += ".xlsx";
+
+        }
+
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheetHd = workbook.createSheet("NV hoạt động");
+        Sheet sheetkhd = workbook.createSheet("NV không hoạt động");
+
+        exportTableToSheet(tblNhanVienhd, sheetHd);
+
+        exportTableToSheet(tblNhanVienkhd, sheetkhd);
+
+        try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
+            workbook.write(fileOut);
+            workbook.close();
+            MsgBox.alert(this, "Xuất dữ liệu ra Excel thành công.");
+        } catch (IOException e) {
+            e.printStackTrace();
+            MsgBox.alert(this, "Có lỗi xảy ra khi xuất dữ liệu ra Excel.");
+        }
+    }
+
+    private void exportTableToSheet(javax.swing.JTable table, Sheet sheet) {
+        TableModel model = table.getModel();
+
+        Row headerRow = sheet.createRow(0);
+        for (int i = 0; i < model.getColumnCount(); i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(model.getColumnName(i));
+        }
+
+        for (int i = 0; i < model.getRowCount(); i++) {
+            Row row = sheet.createRow((short) i + 1);
+            for (int j = 0; j < model.getColumnCount(); j++) {
+                Cell cell = row.createCell((short) j);
+                cell.setCellValue(Objects.toString(model.getValueAt(i, j), ""));
+            }
+        }
+
+        // Auto size columns once after all data is populated
+        for (int i = 0; i < model.getColumnCount(); i++) {
+            sheet.autoSizeColumn(i);
+        }
+    }
 }

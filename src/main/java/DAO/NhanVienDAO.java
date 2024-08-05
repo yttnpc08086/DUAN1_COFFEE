@@ -12,7 +12,8 @@ public class NhanVienDAO implements InterfaceNhanVien {
 
     private String INSERT_SQL = "INSERT INTO NhanVien VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
     private String UPDATE_SQL = "UPDATE NhanVien SET TenNV = ?, GioiTinh = ?, Ngaysinh = ?, Diachi = ?, Email = ?, SDT = ?, Username = ?, Pass = ?, Vaitro = ?, Trangthai = ?, Hinh = ? WHERE ID_Nhanvien = ?";
-    private String DELETE_SQL = "UPDATE NhanVien SET Trangthai = 0 WHERE ID_Nhanvien = ?";
+    private String DELETE_HD_SQL = "UPDATE NhanVien SET Trangthai = 0 WHERE ID_Nhanvien = ? AND Trangthai = 1";
+    private String DELETE_KHD_SQL = "DELETE FROM NhanVien WHERE ID_Nhanvien = ? AND Trangthai = 0";
     private String SELECT_ALL_SQL = "SELECT * FROM NhanVien";
     private String SELECT_BY_ID_SQL = "SELECT * FROM NhanVien WHERE ID_Nhanvien = ?";
     private String SELECT_BY_ACCOUNT_SQL = "SELECT * FROM NhanVien WHERE Username = ?";
@@ -52,8 +53,12 @@ public class NhanVienDAO implements InterfaceNhanVien {
                 entity.getId_Nhanvien());
     }
 
-    public void delete(String id) {
-        ConnectUtil.update(DELETE_SQL, id);
+    public void deletehd(String id) {
+        ConnectUtil.update(DELETE_HD_SQL, id);
+    }
+
+    public void deleteKhd(String id) {
+        ConnectUtil.update(DELETE_KHD_SQL, id);
     }
 
     public NhanVien selectById(String id) {
@@ -179,5 +184,7 @@ public class NhanVienDAO implements InterfaceNhanVien {
         }
         return list;
     }
+
+   
 
 }
