@@ -4,7 +4,11 @@
  */
 package views;
 
-
+import DAO.LoaiSanPhamDao;
+import Model.*;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author Admin
@@ -14,11 +18,15 @@ public class QLDoUongJDialog extends javax.swing.JDialog {
     /**
      * Creates new form QLDoUongJDialog
      */
+    LoaiSanPhamDao daolsp = new LoaiSanPhamDao();
+    int row;
     
     public QLDoUongJDialog(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
         initComponents();
         setLocationRelativeTo(null);
-     
+        filltableDoUong();
+        txtidloai.setEditable(false);
     }
 
     /**
@@ -198,6 +206,12 @@ public class QLDoUongJDialog extends javax.swing.JDialog {
 
     private void tbltentheloaiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbltentheloaiMouseClicked
         // TODO add your handling code here:
+        try {
+            row = tbltentheloai.getSelectedRow();
+            edit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_tbltentheloaiMouseClicked
 
     private void txttenloaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txttenloaiActionPerformed
@@ -206,25 +220,206 @@ public class QLDoUongJDialog extends javax.swing.JDialog {
 
     private void btnlammoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnlammoiActionPerformed
         // TODO add your handling code here:
+        lammoi();
     }//GEN-LAST:event_btnlammoiActionPerformed
 
     private void btnxoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnxoaActionPerformed
         // TODO add your handling code here:
-
+        delete();
     }//GEN-LAST:event_btnxoaActionPerformed
 
     private void btnthemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnthemActionPerformed
         // TODO add your handling code here:
+
+        insert();
     }//GEN-LAST:event_btnthemActionPerformed
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
-
+        dispose();
     }//GEN-LAST:event_jLabel1MouseClicked
 
     private void btnsuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsuaActionPerformed
         // TODO add your handling code here:
+        update();
     }//GEN-LAST:event_btnsuaActionPerformed
 
+    
+    private void filltableDoUong() { // hieenr thij len bang
+        DefaultTableModel model = (DefaultTableModel) tbltentheloai.getModel();
+        model.setRowCount(0);
+        List<LoaiSanPham> list = daolsp.selectAll();
+        for (LoaiSanPham x : list) {
+            model.addRow(new Object[]{x.getID_LoaiSP(), x.getTenLoai()});
+        }
+    }
+
+    // chuyền dữ liệu lên form
+    private void setform(LoaiSanPham lsp) {
+        txttenloai.setText(lsp.getTenLoai());
+        txtidloai.setText(lsp.getID_LoaiSP());
+    }
+
+    //
+    private LoaiSanPham getform() {
+        LoaiSanPham lsp = new LoaiSanPham();
+        lsp.setID_LoaiSP(txtidloai.getText());
+        lsp.setTenLoai(txttenloai.getText());
+        return lsp;
+    }
+
+    //
+    private void edit() {
+        String idloaisp = tbltentheloai.getValueAt(row, 0).toString();
+        LoaiSanPham lsp = daolsp.selectID(idloaisp);
+        setform(lsp);
+    }
+
+    // tự điền mã đồ uống
+    private void selectMaxIDLSP() {
+        if (daolsp.selectAll().isEmpty()) {
+            txtidloai.setText("LSP01");
+        } else {
+            txtidloai.setText("LSP" + (daolsp.selectMaLOAISP() + 1));
+        }
+    }
+
+    //
+    private void lammoi() {
+        txttenloai.setText("");
+//        txtidloai.setText("");
+        selectMaxIDLSP();
+
+    }
+
+    //kiểm tra dữ liêu
+    private boolean checknull() {
+        String kt = "^[a- zA- Z]+$";
+        if (txttenloai.getText().equals("")) {
+            JOptionPane.showMessageDialog(this, "loại đồ uống không được để trống");
+            return true;
+        } else if (txttenloai.getText().length() < 3) {
+            JOptionPane.showMessageDialog(this, "loại đồ uống không được dưới 3 kí tự");
+            return true;
+        }
+        return false;
+    }
+
+    private boolean checkLoaiSP() {
+        List<LoaiSanPham> list = daolsp.selectAll();
+        for (int i = 0; i < list.size(); i++) {
+            if (txtidloai.getText().equalsIgnoreCase(list.get(i).getID_LoaiSP())) {
+                JOptionPane.showMessageDialog(this, "mã loại sản phẩm này đã tồn tại");
+                return true;
+            } else if (txttenloai.getText().equalsIgnoreCase(list.get(i).getTenLoai())) {
+                JOptionPane.showMessageDialog(this, "tên loại sản phẩm này đã tồn tại");
+                return true;
+            } else ;
+        }
+
+        return false;
+    }
+
+    // theem du lieu
+    private void insert() {
+        if (checknull()) {
+            return;
+        } else if (checkLoaiSP()) {
+            return;
+        } else {
+            try {
+                LoaiSanPham lsp = getform();
+                daolsp.insert(lsp);
+                filltableDoUong();
+                lammoi();
+                JOptionPane.showMessageDialog(this, "đã thêm loại sản phẩm này");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    // cập nhập
+    private void update() {
+        if (checknull()) {
+            return;
+        } else {
+            try {
+                LoaiSanPham lsp = getform();
+                daolsp.update(lsp);
+                filltableDoUong();
+                lammoi();
+                JOptionPane.showMessageDialog(this, "đã cập nhập lại loại sản phẩm này");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // xóa dữ liệu
+    private void delete() {
+        row = tbltentheloai.getSelectedRow();
+        int chon = JOptionPane.showConfirmDialog(this, "bạn có muốn xóa loại sản phẩm này ?");
+        if (chon == JOptionPane.YES_OPTION) {
+            if (row == -1) {
+                JOptionPane.showMessageDialog(this, "không có dòng xóa");
+                return;
+            } else {
+                try {
+                    String masp = txtidloai.getText();
+                    daolsp.delete(masp);
+                    filltableDoUong();
+                    lammoi();
+                    JOptionPane.showMessageDialog(this, "đã xóa dữ liệu");
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(this, "tên loại đồ uống đang tồn tại bên sản phẩm không thể xóa");
+                }
+            }
+        } else ;
+    }
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(QLDoUongJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(QLDoUongJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(QLDoUongJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(QLDoUongJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+        //</editor-fold>
+
+        /* Create and display the dialog */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                QLDoUongJDialog dialog = new QLDoUongJDialog(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnlammoi;

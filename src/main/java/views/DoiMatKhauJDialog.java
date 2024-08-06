@@ -4,17 +4,27 @@
  */
 package views;
 
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author ASUS
  */
-public class DoiMatKhauJDialog extends javax.swing.JFrame {
+
+public class DoiMatKhauJDialog extends JDialog {
 
     /**
      * Creates new form DoiMatKhauJDialog
      */
+    public DoiMatKhauJDialog(JFrame parent, boolean modal) {
+        super(parent, modal);
+        initComponents();
+        setLocationRelativeTo(parent); // Đặt vị trí trung tâm so với cửa sổ cha
+    }
+
+    // Constructor mặc định
     public DoiMatKhauJDialog() {
         initComponents();
     }
@@ -157,7 +167,7 @@ public class DoiMatKhauJDialog extends javax.swing.JFrame {
     private boolean changePassword(String username, String oldPassword, String newPassword) {
         return true;
     }
-    
+
     private void btnDoiMKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDoiMKActionPerformed
         // TODO add your handling code here:
         String username = txtTk.getText();
@@ -185,11 +195,6 @@ public class DoiMatKhauJDialog extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -197,23 +202,11 @@ public class DoiMatKhauJDialog extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(DoiMatKhauJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(DoiMatKhauJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(DoiMatKhauJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (Exception ex) {
             java.util.logging.Logger.getLogger(DoiMatKhauJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new DoiMatKhauJDialog().setVisible(true);
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> new DoiMatKhauJDialog().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

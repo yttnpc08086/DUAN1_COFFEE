@@ -14,12 +14,12 @@ import java.sql.ResultSet;
  *
  * @author Admin
  */
-public class SanPhamDao implements InterfaceSanPham{
-    
-   String insert = "insert into dbo.SanPham(ID_Sanpham,TenSP,Gia,ID_DonviSP,ID_LoaiSP,Trangthai,Hinh) values(?,?,?,?,?,?,?)";
+public class SanPhamDao implements InterfaceSanPham {
+
+    String insert = "insert into dbo.SanPham(ID_Sanpham,TenSP,Gia,ID_DonviSP,ID_LoaiSP,Trangthai,Hinh) values(?,?,?,?,?,?,?)";
 //String insert = "insert into dbo.SanPham(ID_Sanpham,TenSP,Gia,ID_DonviSP,ID_LoaiSP,Trangthai,Hinh) values(?,?,?,DV1,?,?,?)";
-String update_size = "update SanPham set ID_DonviSP=? where ID_Sanpham=?";
-String update_size2 = "update SanPham set ID_DonviSP=?";
+    String update_size = "update SanPham set ID_DonviSP=? where ID_Sanpham=?";
+    String update_size2 = "update SanPham set ID_DonviSP=?";
     String update = "update SanPham set TenSP = ? , Gia =? ,ID_DonviSP=?,"
             + "ID_LoaiSP =?, Trangthai=?  ,Hinh= ? where ID_Sanpham=?";
 
@@ -43,7 +43,7 @@ String update_size2 = "update SanPham set ID_DonviSP=?";
 
     public void insert(SanPham sp) {
 
-        ConnectUtil.update(insert, sp.getId_sp(), sp.getTen_sp(), sp.getGia_sp(),sp.getId_donviSP(),
+        ConnectUtil.update(insert, sp.getId_sp(), sp.getTen_sp(), sp.getGia_sp(), sp.getId_donviSP(),
                 sp.getId_loaiSP(), sp.isTrangthai(), sp.getHinh());
     }
 
@@ -51,14 +51,15 @@ String update_size2 = "update SanPham set ID_DonviSP=?";
         ConnectUtil.update(update, sp.getTen_sp(), sp.getGia_sp(), sp.getId_donviSP(),
                 sp.getId_loaiSP(), sp.isTrangthai(), sp.getHinh(), sp.getId_sp());
     }
-    
-    public void update_size(String size, String idSP){
-        ConnectUtil.update(update_size, size,idSP);
+
+    public void update_size(String size, String idSP) {
+        ConnectUtil.update(update_size, size, idSP);
     }
-    
-    public void update_size2(String size){
+
+    public void update_size2(String size) {
         ConnectUtil.update(update_size2, size);
     }
+
     public void delete(String id) {
         ConnectUtil.update(update_trangtrai, id);
     }

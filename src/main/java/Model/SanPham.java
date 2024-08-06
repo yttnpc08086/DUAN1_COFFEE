@@ -16,6 +16,7 @@ public class SanPham {
     private String id_loaiSP;
     private boolean Trangthai;
     private String hinh;
+    
     public SanPham(){
         
     }
@@ -88,5 +89,21 @@ public class SanPham {
     @Override
     public String toString(){
         return ten_sp;
+    }
+
+    public Object getid_sp() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public Object getten_sp() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public Object getgia_sp() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public Object getid_loaiSP() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

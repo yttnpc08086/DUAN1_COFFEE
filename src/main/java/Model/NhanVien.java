@@ -16,6 +16,13 @@ public class NhanVien {
     private boolean TrangThai;
     private String Hinh;
 
+    public NhanVien(String id_Nhanvien, String TenNV, boolean gender, boolean VaiTro) {
+        this.id_Nhanvien = id_Nhanvien;
+        this.TenNV = TenNV;
+        this.gender = gender;
+        this.VaiTro = VaiTro;
+    }
+    
     public NhanVien(String id_Nhanvien, String TenNV, boolean gender, Date Ngaysinh, String DiaChi, String Email, String SDT, String userName, String Pass, boolean VaiTro, boolean TrangThai, String Hinh) {
         this.id_Nhanvien = id_Nhanvien;
         this.TenNV = TenNV;
@@ -130,4 +137,5 @@ public class NhanVien {
     public void setHinh(String Hinh) {
         this.Hinh = Hinh;
     }
+    
 }

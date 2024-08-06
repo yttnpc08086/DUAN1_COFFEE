@@ -5,6 +5,9 @@
  */
 package views;
 
+import java.util.Random;
+import javax.swing.JOptionPane;
+
 /**
  * @author HP
  */
@@ -13,16 +16,13 @@ public class QuenMatKhauJDialog extends javax.swing.JDialog {
     /**
      * Creates new form QuenMatKhauJDialog
      */
-    String code;
-    String to;
+    private String verificationCode;
 
     public QuenMatKhauJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(null);
-        //txtMaxacnhan.setEditable(false);
         txtMaxacnhan.setEnabled(false);
-
     }
 
     /**
@@ -157,16 +157,50 @@ public class QuenMatKhauJDialog extends javax.swing.JDialog {
 
     private void btnguimaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnguimaActionPerformed
         // TODO add your handling code here:
-        
+        String email = txtEmail.getText().trim();
+        if (!email.isEmpty()) {
+            verificationCode = generateVerificationCode();
+            sendVerificationCode(email, verificationCode);
+            txtMaxacnhan.setEnabled(true);
+            JOptionPane.showMessageDialog(this, "Mã xác nhận đã được gửi tới email của bạn.");
+        } else {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập email.");
+        }
     }//GEN-LAST:event_btnguimaActionPerformed
 
     private void btnxacnhanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnxacnhanActionPerformed
         // TODO add your handling code here:
+        String code = txtMaxacnhan.getText().trim();
+        if (code.equals(verificationCode)) {
+            String newPassword = JOptionPane.showInputDialog(this, "Nhập mật khẩu mới:");
+            if (newPassword != null && !newPassword.isEmpty()) {
+                // Update password in the database
+                // NhanVienDAO.updatePassword(email, newPassword);
+                JOptionPane.showMessageDialog(this, "Đặt lại mật khẩu thành công.");
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập mật khẩu mới.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Mã xác nhận không đúng.");
+        }
     }//GEN-LAST:event_btnxacnhanActionPerformed
 
     private void btnHuyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHuyActionPerformed
         // TODO add your handling code here:
+        this.dispose();
     }//GEN-LAST:event_btnHuyActionPerformed
+
+    private String generateVerificationCode() {
+        Random rand = new Random();
+        int code = 100000 + rand.nextInt(900000);
+        return String.valueOf(code);
+    }
+
+    private void sendVerificationCode(String email, String code) {
+        // Logic to send email with the verification code
+        // For example, using JavaMail API
+    }
 
     /**
      * @param args the command line arguments

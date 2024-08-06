@@ -4,11 +4,11 @@
  */
 package DAO;
 
+
 import Model.*;
 import java.util.*;
 import java.sql.ResultSet;
 import Helper.ConnectUtil;
-
 /**
  *
  * @author Admin
@@ -22,26 +22,32 @@ public class LoaiSanPhamDao implements InterfaceLoaiSanPham{
     String sqlDelete = "delete LoaiSanPham where ID_LoaiSP = ?";
     
     
+    @Override
     public void insert(LoaiSanPham lsp) {
         ConnectUtil.update(insert, lsp.getID_LoaiSP(),lsp.getTenLoai());
     }
 
+    @Override
     public void update(LoaiSanPham lsp) {
         ConnectUtil.update(sqlUpdate, lsp.getTenLoai(), lsp.getID_LoaiSP());
     }
 
+    @Override
     public void delete(String id) {
         ConnectUtil.update(sqlDelete, id);
     }
 
+    @Override
     public List<LoaiSanPham> selectAll() {
         return selectBySQL(selectAll);
     }
 
+    @Override
     public LoaiSanPham selectID(String id) {
         return selectBySQL(selectByid,id).get(0);
     }
 
+    @Override
     public List<LoaiSanPham> selectBySQL(String sql, Object... agrs) {
         List<LoaiSanPham> list = new ArrayList<>();
         try {

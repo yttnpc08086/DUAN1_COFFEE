@@ -4,6 +4,11 @@
  */
 package views;
 
+import DAO.DonViSanPhamDao;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import Model.*;
 /**
  *
  * @author Admin
@@ -13,6 +18,16 @@ public class QLDonViDoUongJDialog extends javax.swing.JDialog {
     /**
      * Creates new form QLDonViDoUongJDialog
      */
+    DonViSanPhamDao dao = new DonViSanPhamDao();
+    int row;
+    public QLDonViDoUongJDialog(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
+        initComponents();
+        setLocationRelativeTo(null);
+        filltableDonVi();
+        txtmadonvi.setEnabled(true);
+        txttendonvi.requestFocus();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -212,22 +227,32 @@ public class QLDonViDoUongJDialog extends javax.swing.JDialog {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here
+        insert();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
+        delete();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        update();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
+        clear();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void tbldonviMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbldonviMouseClicked
         // TODO add your handling code here:
+        try {
+            row = tbldonvi.getSelectedRow();
+            edit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_tbldonviMouseClicked
 
     /**
@@ -255,13 +280,151 @@ public class QLDonViDoUongJDialog extends javax.swing.JDialog {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(QLDonViDoUongJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
 
         /* Create and display the dialog */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                QLDonViDoUongJDialog dialog = new QLDonViDoUongJDialog(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
+            }
+        });
     }
 
     
+    private void filltableDonVi() {
+        DefaultTableModel model = (DefaultTableModel) tbldonvi.getModel();
+        model.setRowCount(0);
+        List<DonViSanPham> list = dao.selectAll();
+        for (DonViSanPham x : list) {
+            model.addRow(new Object[]{x.getID_DonviSP(), x.getTenDonvi(), x.getKichthuoc(),x.getThemTien()});
+        }
+    }
+
+    private void setform(DonViSanPham dv) {
+        txtmadonvi.setText(tbldonvi.getValueAt(row, 0).toString());
+        txttendonvi.setText(tbldonvi.getValueAt(row, 1).toString());
+        txtkichthuoc.setText(tbldonvi.getValueAt(row, 2).toString());
+        txtGiaUpSize.setText(tbldonvi.getValueAt(row, 3).toString());
+    }
+
+    private DonViSanPham getform() {
+        DonViSanPham dv = new DonViSanPham();
+        dv.setID_DonviSP(txtmadonvi.getText());
+        dv.setTenDonvi(txttendonvi.getText());
+        dv.setKichthuoc(Integer.parseInt(txtkichthuoc.getText()));
+        dv.setThemTien(Integer.parseInt(txtGiaUpSize.getText()));
+        return dv;
+    }
+
+    private void edit() {
+        String id = tbldonvi.getValueAt(row, 0).toString();
+        DonViSanPham dv = dao.selectID(id);
+        setform(dv);
+    }
+
+    //
+    private void clear() {
+        txtmadonvi.setText("");
+        txttendonvi.setText("");
+        txtkichthuoc.setText("");
+        txtGiaUpSize.setText("");
+        row = -1;
+        selectMaxIDLSP();
+    }
+
+    //
+    private boolean checknull() {
+        String chuoi = "^[a-zA-Z]$";
+        String ktso = "^[0-9]{0,9}$";
+        if (txttendonvi.getText().equals("")) {
+            JOptionPane.showMessageDialog(this, "tên  đơn vị không để trống");
+            return true;
+        } //        else if (!txttendonvi.getText().matches(chuoi)) {
+        //            JOptionPane.showMessageDialog(this, "đơn vị đồ uống nhập không đúng định dạng");
+        //            return true;
+        //        }
+        else if (txtkichthuoc.getText().equals("")) {
+            JOptionPane.showMessageDialog(this, "kích thước  nhập không được để trống");
+            return true;
+
+        } else if (!txtkichthuoc.getText().matches(ktso)) {
+            JOptionPane.showMessageDialog(this, "kích thước  nhập không đúng định dạng");
+            return true;
+        }
+        return false;
+    }
+
+    // kt khóa chính
+    private boolean checkPK() {
+        List<DonViSanPham> list = dao.selectAll();
+        for (DonViSanPham dv : list) {
+            if (txtmadonvi.getText().equalsIgnoreCase(dv.getID_DonviSP())) {
+                JOptionPane.showMessageDialog(this, "trùng mã đơn vị đồ uống");
+                return true;
+
+            } else ;
+        }
+        return false;
+    }
+
+    //
+    private void selectMaxIDLSP() {
+        if (dao.selectAll().isEmpty()) {
+            txtmadonvi.setText("DV01");
+        } else {
+            txtmadonvi.setText("DV" + (dao.selectMaLOAISP() + 1));
+        }
+    }
+
+    //
+    private void insert() {
+        if (checkPK()) {
+            return;
+        } else if (checknull()) {
+            return;
+        } else {
+            DonViSanPham dv = getform();
+            dao.insert(dv);
+            filltableDonVi();
+            clear();
+            JOptionPane.showMessageDialog(this, "thêm dữ liệu thành công");
+        }
+    }
+
+    private void delete() {
+        if (JOptionPane.showConfirmDialog(this, "bạn có muốn xóa loại sản phẩm này ?") == JOptionPane.YES_OPTION) {
+            try {
+                String masp = txtmadonvi.getText();
+                dao.delete(masp);
+                filltableDonVi();
+                clear();
+                JOptionPane.showMessageDialog(this, "đã xóa dữ liệu");
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "không thể xóa đơn vị sản phẩm do có sản phẩm đang thuộc "
+                        + "đơn vị này!");
+            }
+        } else {
+            return;
+        }
+    }
+
+    private void update() {
+        if (checknull()) {
+            return;
+        } else {
+            DonViSanPham dv = getform();
+            dao.update(dv);
+            filltableDonVi();
+            clear();
+            JOptionPane.showMessageDialog(this, "câp nhập dữ liệu thành công");
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

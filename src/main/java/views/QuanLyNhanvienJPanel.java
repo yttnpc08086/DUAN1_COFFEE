@@ -55,7 +55,7 @@ public class QuanLyNhanvienJPanel extends javax.swing.JPanel {
     }
 
     private void loadNhanVienkhd() {
-        DefaultTableModel model = (DefaultTableModel) tblNhanVienkhd.getModel();
+        DefaultTableModel model = (DefaultTableModel) tblNhanVienhd.getModel();
         model.setRowCount(0); // Clear existing rows
 
         try {
@@ -102,9 +102,6 @@ public class QuanLyNhanvienJPanel extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         txtEmail = new javax.swing.JTextField();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        jPanel3 = new javax.swing.JPanel();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        tblNhanVienkhd = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblNhanVienhd = new javax.swing.JTable();
@@ -157,39 +154,6 @@ public class QuanLyNhanvienJPanel extends javax.swing.JPanel {
         jLabel5.setText("Email");
 
         jTabbedPane1.setPreferredSize(new java.awt.Dimension(1241, 300));
-
-        tblNhanVienkhd.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Mã NV ", "Tên ", "Giới tính", "Ngày sinh", "Địa chỉ", "SDT", "Email", "Vai trò"
-            }
-        ));
-        tblNhanVienkhd.setGridColor(new java.awt.Color(0, 0, 0));
-        tblNhanVienkhd.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblNhanVienkhdMouseClicked(evt);
-            }
-        });
-        jScrollPane4.setViewportView(tblNhanVienkhd);
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 1215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        jTabbedPane1.addTab("Nhân viên không hoạt dộng", jPanel3);
 
         jPanel2.setPreferredSize(new java.awt.Dimension(1200, 300));
 
@@ -416,10 +380,6 @@ public class QuanLyNhanvienJPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_tblNhanVienhdMouseClicked
 
-    private void tblNhanVienkhdMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblNhanVienkhdMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tblNhanVienkhdMouseClicked
-
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnThemActionPerformed
@@ -451,10 +411,8 @@ public class QuanLyNhanvienJPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel lblhinh;
     private javax.swing.JRadioButton rdoNam;
@@ -462,7 +420,6 @@ public class QuanLyNhanvienJPanel extends javax.swing.JPanel {
     private javax.swing.JRadioButton rdoNu;
     private javax.swing.JRadioButton rdoQuanly;
     private javax.swing.JTable tblNhanVienhd;
-    private javax.swing.JTable tblNhanVienkhd;
     private javax.swing.JButton tbnLamMoi;
     private javax.swing.JTextArea txtDiachi;
     private javax.swing.JTextField txtEmail;

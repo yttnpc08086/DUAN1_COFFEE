@@ -95,7 +95,7 @@
                       <Component id="txtpass" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lblQuenPass" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="38" max="32767" attributes="0"/>
+                      <EmptySpace pref="40" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="btnthoat" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
                           <Component id="btndangnhap" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>

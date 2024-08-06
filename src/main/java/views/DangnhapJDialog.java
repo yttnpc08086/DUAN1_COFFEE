@@ -8,8 +8,12 @@ package views;
 import DAO.NhanVienDAO;
 import Helper.Auth;
 import Model.NhanVien;
-import javax.swing.JOptionPane;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 /**
  * @author HP
  */
@@ -25,15 +29,22 @@ public class DangnhapJDialog extends javax.swing.JDialog {
         initComponents();
         setLocationRelativeTo(null);
         setResizable(false);
+
+        lblQuenPass.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblQuenPassMouseClicked(evt);
+            }
+        });
     }
- 
+
     private void check() {
         try {
             NhanVien nhanVien = dao.selectByAccount(txtUserName.getText());
             if (nhanVien != null && nhanVien.getPass().equals(txtpass.getText())) {
                 JOptionPane.showMessageDialog(this, "Đăng nhập thành công!");
                 //Viết code hiển thị trang main khi đăng nhập thành công.
-                 Auth.user = nhanVien;
+                Auth.user = nhanVien;
                 this.dispose();
                 new main().setVisible(true);
             } else {
@@ -171,7 +182,7 @@ public class DangnhapJDialog extends javax.swing.JDialog {
                 .addComponent(txtpass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblQuenPass)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnthoat, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btndangnhap, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -246,19 +257,15 @@ public class DangnhapJDialog extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtpassActionPerformed
 
-    private void lblQuenPassMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblQuenPassMouseClicked
 
+    private void lblQuenPassMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblQuenPassMouseClicked
+        new QuenMatKhauJDialog((java.awt.Frame) this.getParent(), true).setVisible(true);
     }//GEN-LAST:event_lblQuenPassMouseClicked
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-         */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -266,32 +273,19 @@ public class DangnhapJDialog extends javax.swing.JDialog {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(DangnhapJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(DangnhapJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(DangnhapJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (Exception ex) {
             java.util.logging.Logger.getLogger(DangnhapJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
 
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                DangnhapJDialog dialog = new DangnhapJDialog(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            DangnhapJDialog dialog = new DangnhapJDialog(new javax.swing.JFrame(), true);
+            dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosing(java.awt.event.WindowEvent e) {
+                    System.exit(0);
+                }
+            });
+            dialog.setVisible(true);
         });
     }
 
@@ -311,52 +305,43 @@ public class DangnhapJDialog extends javax.swing.JDialog {
     private javax.swing.JPasswordField txtpass;
     // End of variables declaration//GEN-END:variables
 
-    private void dangNhap() {
-        String manv = txtUserName.getText().trim();
-        String matKhau = new String(txtpass.getPassword()).trim();
-        NhanVien nhanVien = dao.selectByAccount(manv);
-
-        if (nhanVien != null && nhanVien.getPass().equals(matKhau)) {
-            Auth.user = nhanVien;
-            if (nhanVien.isTrangThai()) {
-                if (Auth.isManager()) {
-                    JOptionPane.showMessageDialog(this, "Đăng nhập thành công dưới quyền quản lý");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Đăng nhập thành công dưới quyền nhân viên");
-                }
-                // Đóng cửa sổ đăng nhập
-                this.dispose();
-                // Mở cửa sổ chính
-                new main().setVisible(true);
-            } else {
-                int result = JOptionPane.showConfirmDialog(this,
-                        "Tài khoản này đã bị khóa! Vui lòng liên hệ quản lý để mở!",
-                        "Hệ thống quản lý Coffee",
-                        JOptionPane.YES_NO_OPTION);
-                if (result == JOptionPane.YES_OPTION) {
-                    txtUserName.setText("");
-                    txtpass.setText("");
-                    txtUserName.requestFocus();
-                } else {
-                    System.exit(0);
-                }
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Tài khoản hoặc mật khẩu không đúng.");
-        }
-    }
+//    private void dangNhap() {
+//        String manv = txtUserName.getText().trim();
+//        String matKhau = new String(txtpass.getPassword()).trim();
+//        NhanVien nhanVien = dao.selectByAccount(manv);
+//
+//        if (nhanVien != null && nhanVien.getPass().equals(matKhau)) {
+//            Auth.user = nhanVien;
+//            if (nhanVien.isTrangThai()) {
+//                if (Auth.isManager()) {
+//                    JOptionPane.showMessageDialog(this, "Đăng nhập thành công dưới quyền quản lý");
+//                } else {
+//                    JOptionPane.showMessageDialog(this, "Đăng nhập thành công dưới quyền nhân viên");
+//                }
+//                // Đóng cửa sổ đăng nhập
+//                this.dispose();
+//                // Mở cửa sổ chính
+//                new main().setVisible(true);
+//            } else {
+//                int result = JOptionPane.showConfirmDialog(this,
+//                        "Tài khoản này đã bị khóa! Vui lòng liên hệ quản lý để mở!",
+//                        "Hệ thống quản lý Coffee",
+//                        JOptionPane.YES_NO_OPTION);
+//                if (result == JOptionPane.YES_OPTION) {
+//                    txtUserName.setText("");
+//                    txtpass.setText("");
+//                    txtUserName.requestFocus();
+//                } else {
+//                    System.exit(0);
+//                }
+//            }
+//        } else {
+//            JOptionPane.showMessageDialog(this, "Tài khoản hoặc mật khẩu không đúng.");
+//        }
+//    }
 
     private void ketThuc() {
         System.exit(0);
     }
 
-    private static class dao {
-
-        private static NhanVien selectByAccount(String manv) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        public dao() {
-        }
-    }
 }
